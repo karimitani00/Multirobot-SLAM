@@ -39,6 +39,13 @@ floorplan
 turtlebot
 (
   pose [ 51.0 3.0 0.0 0.0 ]
-  name "turtlebot1"
+  name "robot_0"
+  color "blue"
+)
+
+turtlebot
+(
+  pose [ 51.0 6.0 0.0 0.0 ]
+  name "robot_1"
   color "blue"
 )
