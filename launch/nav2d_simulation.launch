@@ -1,21 +1,23 @@
 <launch>
 
+    <param name="use_sim_time" value="true" />
+
     <node name="Stage" pkg="stage_ros" type="stageros" args="$(find mr_slam)/world/world.world"/>
-
-    <!-- Start the joystick-driver and remote-controller for operation-->
-    <node name="Joystick" pkg="joy" type="joy_node" />
-    <node name="SimController" pkg="nav2d_remote" type="sim_joy" args="2"/>
-
-    <node name="R0_MapAlign" pkg="tf" type="static_transform_publisher" args="0 0 0 0 0 0 /map /robot_0/map 100"/>
-    <node name="R1_MapAlign" pkg="tf" type="static_transform_publisher" args="40 0 0 0 0 0 /map /robot_1/map 100"/>
-
-    <!-- Pioneer model for fancy visualization -->
-    <include file="$(find p2os_urdf)/launch/upload_pioneer3at.xml"/>
 
     <group ns="robot_0">
         <param name="robot_id" value="0" />
         <param name="tf_prefix" type="string" value="robot_0"/>
         <rosparam file="$(find nav2d_tutorials)/param/ros.yaml"/>
+
+        <node name="Navigator" pkg="nav2d_navigator" type="navigator">
+            <rosparam file="$(find nav2d_tutorials)/param/navigator.yaml"/>
+        </node>
+
+        <node name="Operator" pkg="nav2d_operator" type="operator" >
+            <remap from="scan" to="base_scan"/>
+            <rosparam file="$(find nav2d_tutorials)/param/operator.yaml"/>
+            <rosparam file="$(find nav2d_tutorials)/param/costmap.yaml" ns="local_map" />
+        </node>
 
         <node name="Mapper" pkg="nav2d_karto" type="mapper">
             <remap from="scan" to="base_scan"/>
@@ -36,6 +38,16 @@
         <param name="tf_prefix" type="string" value="robot_1"/>
         <rosparam file="$(find nav2d_tutorials)/param/ros.yaml"/>
 
+        <node name="Navigator" pkg="nav2d_navigator" type="navigator">
+            <rosparam file="$(find nav2d_tutorials)/param/navigator.yaml"/>
+        </node>
+
+        <node name="Operator" pkg="nav2d_operator" type="operator" >
+            <remap from="scan" to="base_scan"/>
+            <rosparam file="$(find nav2d_tutorials)/param/operator.yaml"/>
+            <rosparam file="$(find nav2d_tutorials)/param/costmap.yaml" ns="local_map" />
+        </node>
+
         <node name="Mapper" pkg="nav2d_karto" type="mapper">
             <remap from="scan" to="base_scan"/>
             <remap from="karto_in" to="/shared_scans_r1"/>
@@ -47,7 +59,12 @@
             <param name="publish_frequency" type="double" value="30.0"/>
         </node>
 
-            <node pkg="p2os_urdf" type="publisher" name="publisher"/>
-    </group>
+        <node pkg="p2os_urdf" type="publisher" name="publisher"/>
+    </group>o
+
+    <node pkg="rviz" type="rviz" args=" -d $(find nav2d_tutorials)/param/tutorial1.rviz" />
+
+    <node name="GetMap" pkg="nav2d_navigator" type="get_map_client" />
+    <node name="Explore" pkg="nav2d_navigator" type="explore_client" />
 
 </launch>
