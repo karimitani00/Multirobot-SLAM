@@ -31,6 +31,9 @@
         </node>
 
         <node pkg="p2os_urdf" type="publisher" name="publisher"/>
+
+        <node name="GetMap" pkg="nav2d_navigator" type="get_map_client" />
+        <node name="Explore" pkg="nav2d_navigator" type="explore_client" />
     </group>
 
     <group ns="robot_1">
@@ -60,11 +63,11 @@
         </node>
 
         <node pkg="p2os_urdf" type="publisher" name="publisher"/>
-    </group>o
+
+        <node name="GetMap" pkg="nav2d_navigator" type="get_map_client" />
+        <node name="Explore" pkg="nav2d_navigator" type="explore_client" />
+    </group>
 
     <node pkg="rviz" type="rviz" args=" -d $(find nav2d_tutorials)/param/tutorial1.rviz" />
-
-    <node name="GetMap" pkg="nav2d_navigator" type="get_map_client" />
-    <node name="Explore" pkg="nav2d_navigator" type="explore_client" />
 
 </launch>
