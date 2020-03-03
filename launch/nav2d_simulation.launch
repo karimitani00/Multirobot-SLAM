@@ -1,8 +1,11 @@
 <launch>
 
     <param name="use_sim_time" value="true" />
+    <rosparam file="$(find nav2d_tutorials)/param/ros.yaml"/>
 
-    <node name="Stage" pkg="stage_ros" type="stageros" args="$(find mr_slam)/world/world.world"/>
+    <node name="Stage" pkg="stage_ros" type="stageros" args="$(find nav2d_tutorials)/world/tutorial4.world">
+        <param name="base_watchdog_timeout" value="0" />
+    </node>
 
     <group ns="robot_0">
         <param name="robot_id" value="0" />
@@ -29,8 +32,6 @@
         <node pkg="robot_state_publisher" type="state_publisher" name="robot_state_publisher">
             <param name="publish_frequency" type="double" value="30.0"/>
         </node>
-
-        <node pkg="p2os_urdf" type="publisher" name="publisher"/>
 
         <node name="GetMap" pkg="nav2d_navigator" type="get_map_client" />
         <node name="Explore" pkg="nav2d_navigator" type="explore_client" />
@@ -62,12 +63,10 @@
             <param name="publish_frequency" type="double" value="30.0"/>
         </node>
 
-        <node pkg="p2os_urdf" type="publisher" name="publisher"/>
-
         <node name="GetMap" pkg="nav2d_navigator" type="get_map_client" />
         <node name="Explore" pkg="nav2d_navigator" type="explore_client" />
     </group>
 
-    <node pkg="rviz" type="rviz" args=" -d $(find nav2d_tutorials)/param/tutorial1.rviz" />
+    <node name="rviz" pkg="rviz" type="rviz" args=" -d $(find nav2d_tutorials)/param/tutorial1.rviz" />
 
 </launch>

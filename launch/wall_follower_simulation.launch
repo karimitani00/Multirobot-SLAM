@@ -26,6 +26,8 @@
 
         <node name="GetMap" pkg="nav2d_navigator" type="get_map_client" />
         <node name="Explore" pkg="nav2d_navigator" type="explore_client" />
+
+        <node pkg="rviz" type="rviz" args=" -d $(find nav2d_tutorials)/param/tutorial1.rviz" />
     </group>
 
     <group ns="robot_1">
@@ -50,8 +52,8 @@
 
         <node name="GetMap" pkg="nav2d_navigator" type="get_map_client" />
         <node name="Explore" pkg="nav2d_navigator" type="explore_client" />
-    </group>
 
-    <node pkg="rviz" type="rviz" args=" -d $(find nav2d_tutorials)/param/tutorial1.rviz" />
+        <node pkg="rviz" type="rviz" args=" -d $(find nav2d_tutorials)/param/tutorial1.rviz" />
+    </group>
 
 </launch>
