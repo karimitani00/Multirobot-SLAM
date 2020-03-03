@@ -1,0 +1,57 @@
+<launch>
+
+    <param name="use_sim_time" value="true" />
+
+    <node name="Stage" pkg="stage_ros" type="stageros" args="$(find mr_slam)/world/world.world"/>
+
+    <group ns="robot_0">
+        <param name="robot_id" value="0" />
+        <param name="tf_prefix" type="string" value="robot_0"/>
+        <rosparam file="$(find nav2d_tutorials)/param/ros.yaml"/>
+
+        <node name="Wall Follower" pkg="mr_slam" type="wall_follower.py" output="screen" />
+
+        <node name="Mapper" pkg="nav2d_karto" type="mapper">
+            <remap from="scan" to="base_scan"/>
+            <remap from="karto_in" to="/shared_scans_r2"/>
+            <remap from="karto_out" to="/shared_scans_r1"/>
+            <rosparam file="$(find nav2d_tutorials)/param/mapper.yaml"/>
+        </node>
+
+        <node pkg="robot_state_publisher" type="state_publisher" name="robot_state_publisher">
+            <param name="publish_frequency" type="double" value="30.0"/>
+        </node>
+
+        <node pkg="p2os_urdf" type="publisher" name="publisher"/>
+
+        <node name="GetMap" pkg="nav2d_navigator" type="get_map_client" />
+        <node name="Explore" pkg="nav2d_navigator" type="explore_client" />
+    </group>
+
+    <group ns="robot_1">
+        <param name="robot_id" value="1" />
+        <param name="tf_prefix" type="string" value="robot_1"/>
+        <rosparam file="$(find nav2d_tutorials)/param/ros.yaml"/>
+
+        <node name="Wall Follower" pkg="mr_slam" type="wall_follower.py" output="screen" />
+
+        <node name="Mapper" pkg="nav2d_karto" type="mapper">
+            <remap from="scan" to="base_scan"/>
+            <remap from="karto_in" to="/shared_scans_r1"/>
+            <remap from="karto_out" to="/shared_scans_r2"/>
+            <rosparam file="$(find nav2d_tutorials)/param/mapper.yaml"/>
+        </node>
+
+        <node pkg="robot_state_publisher" type="state_publisher" name="robot_state_publisher">
+            <param name="publish_frequency" type="double" value="30.0"/>
+        </node>
+
+        <node pkg="p2os_urdf" type="publisher" name="publisher"/>
+
+        <node name="GetMap" pkg="nav2d_navigator" type="get_map_client" />
+        <node name="Explore" pkg="nav2d_navigator" type="explore_client" />
+    </group>
+
+    <node pkg="rviz" type="rviz" args=" -d $(find nav2d_tutorials)/param/tutorial1.rviz" />
+
+</launch>
