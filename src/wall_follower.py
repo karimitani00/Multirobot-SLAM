@@ -1,6 +1,4 @@
 #!/usr/bin/env python
-
-
 import rospy
 from geometry_msgs.msg import Twist
 from sensor_msgs.msg import LaserScan
@@ -12,6 +10,7 @@ DIST_THRESHOLD = 0.5
 window = 0.05
 NUM_ROBOTS = 2
 
+# code adapted from Almas Abdivayev
 class RobotState:
     def __init__(self):
         self.cmd_pub = rospy.Publisher("cmd_vel", Twist, queue_size=0)
@@ -19,9 +18,9 @@ class RobotState:
         self.state = 0 # 0: stop, 1: forward
         self.error = 0
         self.error_hist = [] # list that stores all of the errors for integral term and derivative term
-        self.pgain = 2 # Kp
-        self.dgain = 1 # Kd
-        self.igain = 0 # Ki
+        self.kp = 2 # Kp
+        self.kd = 1 # Kd
+        self.ki = 0 # Ki
         self.rate_val = RATE
         self.side = -1 # variable that tells us whether to turn left or right
         self.rate = rospy.Rate(self.rate_val)
@@ -88,7 +87,6 @@ class RobotState:
             self.state = 2
             return
 
-    # func to calculate derivative term of an error function
     def derivative_term(self):
         # don't calculate derivative if we don't have first two error poitns
         if len(self.error_hist) > 2:
@@ -100,13 +98,11 @@ class RobotState:
 
         return (cur-prev)/self.rate_val
 
-    # return integral term of the error function, simply sum the error
     def integral_term(self):
         return sum(self.error_hist[-5:])
 
-
-    def adjust_z(self):
-        return self.pgain * self.error + self.dgain * self.derivative_term() + self.igain * self.rate_val * self.integral_term() * self.rate_val
+    def calc_error(self):
+        return self.kp * self.error + self.kd * self.derivative_term() + self.ki * self.rate_val * self.integral_term() * self.rate_val
 
     def spin(self):
         rate = rospy.Rate(5)
@@ -115,12 +111,12 @@ class RobotState:
             if self.state == 0:
                 # we are undershooting still getting to the goal distance
                 cmd.linear.x = LIN_VEL
-                cmd.angular.z = self.adjust_z()
+                cmd.angular.z = self.calc_error()
 
             elif self.state == 1:
                 # we've overshot, so we need to move closer to the wall
                 cmd.linear.x = LIN_VEL/2
-                cmd.angular.z = self.adjust_z()/60 # aggressive angular vel, so let's reduce it by a lot
+                cmd.angular.z = self.calc_error()/60 # aggressive angular vel, so let's reduce it by a lot
             elif self.state == 2:
                 # we are actually within some margin of desired distance so just keep moving straight
                 cmd.linear.x = LIN_VEL
@@ -141,7 +137,7 @@ class RobotState:
             rate.sleep()
 
 if __name__ == '__main__':
-    rospy.init_node("wall_node")
+    rospy.init_node("wall_follower_node")
 
     rs = RobotState()
 
