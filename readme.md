@@ -1,7 +1,7 @@
-# kalman filter -- assignment 2
+# MR-SLAM Final Project
 
 ```
-the robot moves for 1 m and collects sensor data
+This project carries out mr-slam in simulation
 ```
 
 ## Getting Started
