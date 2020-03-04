@@ -29,9 +29,9 @@
             <rosparam file="$(find nav2d_tutorials)/param/mapper.yaml"/>
         </node>
 
-        <node pkg="robot_state_publisher" type="state_publisher" name="robot_state_publisher">
+        <!-- <node pkg="robot_state_publisher" type="state_publisher" name="robot_state_publisher">
             <param name="publish_frequency" type="double" value="30.0"/>
-        </node>
+        </node> -->
 
         <node name="GetMap" pkg="nav2d_navigator" type="get_map_client" />
         <node name="Explore" pkg="nav2d_navigator" type="explore_client" />
@@ -59,14 +59,14 @@
             <rosparam file="$(find nav2d_tutorials)/param/mapper.yaml"/>
         </node>
 
-        <node pkg="robot_state_publisher" type="state_publisher" name="robot_state_publisher">
+        <!-- <node pkg="robot_state_publisher" type="state_publisher" name="robot_state_publisher">
             <param name="publish_frequency" type="double" value="30.0"/>
-        </node>
+        </node> -->
 
         <node name="GetMap" pkg="nav2d_navigator" type="get_map_client" />
         <node name="Explore" pkg="nav2d_navigator" type="explore_client" />
     </group>
 
-    <node name="rviz" pkg="rviz" type="rviz" args=" -d $(find nav2d_tutorials)/param/tutorial1.rviz" />
+    <node name="rviz" pkg="rviz" type="rviz" args=" -d $(find nav2d_tutorials)/param/tutorial4.rviz" />
 
 </launch>
