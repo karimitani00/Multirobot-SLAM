@@ -37,22 +37,12 @@ to run the nav2d exploration
 
 ```
 roslaunch mr_slam nav2d_simulation.launch
-rosservice call /robot_0/StartMapping 3
-rosservice call /robot_0/StartExploration 2
 
-rostopic pub /robot_1/Localize/goal nav2d_navigator/LocalizeActionGoal "header:
-  seq: 0
-  stamp:
-    secs: 0
-    nsecs: 0
-  frame_id: ''
-goal_id:
-  stamp:
-    secs: 0
-    nsecs: 0
-  id: ''
-goal:
-  velocity: 0.5"
+ROS_NAMESPACE=robot_0 rosrun teleop_twist_keyboard teleop_twist_keyboard.py
 
-rosservice call /robot_1/StartExploration 2
+rosservice call /robot_0/StartExploration "{}"
+
+ROS_NAMESPACE=robot_1 rosrun teleop_twist_keyboard teleop_twist_keyboard.py
+
+rosservice call /robot_1/StartExploration "{}"
 ```
